@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "LeftViewController.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+/**
+ *  左边框栏
+ */
+@property (nonatomic, strong) LeftViewController *leftViewController;
 
 
 @end
