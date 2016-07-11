@@ -8,6 +8,8 @@
 
 #import "LeftViewController.h"
 #import <objc/runtime.h>
+#define kMainScreenFrameRect    [[UIScreen mainScreen] bounds]
+#define kMainScreenWidth     kMainScreenFrameRect.size.width
 @interface LeftViewController ()
 
 @end
@@ -24,6 +26,11 @@
     
     
     objc_setAssociatedObject(self, @"navigation", rootViewController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    rootViewController.view.layer.shadowColor = [UIColor colorWithRed:120.0 / 255 green:120.0 / 255 blue:120.0 / 255 alpha:1].CGColor;
+    rootViewController.view.layer.shadowOpacity = 0.8;
+    
+    rootViewController.view.layer.shadowOffset = CGSizeMake(-5, 0);
     
     
     self.view.backgroundColor = [UIColor colorWithRed:240.0 / 255 green:240.0 / 255 blue:240.0 / 255 alpha:1];
@@ -52,67 +59,130 @@
     
         UIViewController *controller = objc_getAssociatedObject(self, @"navigation");
         
-        CGPoint point = [sender translationInView:controller.view];
+        CGPoint point = [sender translationInView:self.view];
         
-        
+   
+    
+   
+     NSLog(@"🐈，%@", NSStringFromCGPoint(point));
+
     if (sender.state == UIGestureRecognizerStateBegan) {
-        direction = kCameraMoveDirectionNone;
+    
         
-    } else if (sender.state == UIGestureRecognizerStateChanged && direction == kCameraMoveDirectionNone) {
+         CGPoint point1 = [sender locationInView:controller.view];
         
-        
-        direction = [self determineCameraDirectionIfNeeded:point];
-        
-        switch (direction) {
-            case kCameraMoveDirectionNone:
-            {
-                
-                
-            }
-                break;
-                
-                case kCameraMoveDirectionUp:
-            {
-                
-                
-            }
-                break;
+        if (point1.x < 100) {
             
-                case kCameraMoveDirectionRight:
-            {
-                
-                
-            }
-                break;
-                
-                case kCameraMoveDirectionLeft:
-            {
-                
-            }
-                break;
-                
-            case kCameraMoveDirectionDown:{
-                
-            }
-                break;
-                
-            default:
-                break;
+            objc_setAssociatedObject(self, _cmd, @1, OBJC_ASSOCIATION_ASSIGN);
+            
+            
+            
+        } else {
+            
+             objc_setAssociatedObject(self, _cmd, @0, OBJC_ASSOCIATION_ASSIGN);
+            
+            
         }
         
-    } else if (sender.state == UIGestureRecognizerStateEnded) {
+    }
+    
+    
+    /**
+     *  满足指定区域
+     */
+    if ([objc_getAssociatedObject(self, _cmd) integerValue]) {
         
         
         
+    
+    CGFloat xCount = point.x + kMainScreenWidth * 0.5;
+    
+    
+    if ((xCount > kMainScreenWidth * 0.5) && xCount < 1.3 * kMainScreenWidth) {
+        
+        CGPoint nowPoint = controller.view.center;
+        
+        nowPoint.x = point.x + kMainScreenWidth * 0.5;
+        
+        controller.view.center = nowPoint;
+        
+        
+        
+    } else if(xCount > 1.3 * kMainScreenWidth){
+        
+        
+        CGPoint nowPoint = controller.view.center;
+        
+        nowPoint.x = 1.3 * kMainScreenWidth;
+        
+        controller.view.center = nowPoint;
+        
+        
+    } else if (xCount < 0.5 * kMainScreenWidth && point.x < 0){
+        
+        
+        CGPoint nowPoint = controller.view.center;
+        
+        nowPoint.x = 1.3 * kMainScreenWidth + point.x;
+        
+        controller.view.center = nowPoint;
+        
+        
+    } else if (xCount < 0.5 * kMainScreenWidth){
+        
+        
+        CGPoint nowPoint = controller.view.center;
+        
+        nowPoint.x = 0.5 * kMainScreenWidth;
+        
+        controller.view.center = nowPoint;
+    }
+        
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        NSLog(@"🐯");
+        
+        
+        if (xCount >=  kMainScreenWidth) {
+            
+            CGPoint nowPoint = controller.view.center;
+            
+            nowPoint.x = 1.3 * kMainScreenWidth;
+            
+[UIView animateWithDuration:0.15 animations:^{
+   
+    controller.view.center = nowPoint;
+
+    
+    
+}];
+            
+            
+            
+        } else {
+            
+            
+            
+            CGPoint nowPoint = controller.view.center;
+            
+            nowPoint.x = 0.5 * kMainScreenWidth;
+            
+            [UIView animateWithDuration:0.15 animations:^{
+                
+                controller.view.center = nowPoint;
+                
+                
+                
+            }];
+            
+
+            
+            
+        }
         
         
     }
-        
-        
-        
-        
     
-    
+    }
     
     
 }

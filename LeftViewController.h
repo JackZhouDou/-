@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-CGFloat const gestureMinimumTranslation = 20.0 ;
+CGFloat const gestureMinimumTranslation = 0.0 ;
+CGFloat const gestureMinimumTranslation1 = 20.0 ;
 
 typedef enum : NSInteger {
     /**
